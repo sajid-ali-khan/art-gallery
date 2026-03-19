@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sajid Ali Khan – Pencil Portraits</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="artist-name">Sajid Ali Khan</h1>
+                <p class="artist-subtitle">Pencil Portraits & Sketches</p>
+            </div>
+        </header>
+
+        <!-- Category Tabs -->
+        <nav class="categories-nav">
+            <div class="categories-list" id="categoriesList">
+                <!-- Populated dynamically from data.json -->
+            </div>
+        </nav>
+
+        <!-- Gallery -->
+        <main class="gallery-section">
+            <div class="hero-section" id="heroSection">
+                <!-- Hero image populated dynamically -->
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Populated dynamically from data.json -->
+            </div>
+        </main>
+
+        <!-- Lightbox -->
+        <div class="lightbox" id="lightbox">
+            <button class="lightbox-close" id="lightboxClose">&times;</button>
+            <button class="lightbox-prev" id="lightboxPrev">&#10094;</button>
+            <button class="lightbox-next" id="lightboxNext">&#10095;</button>
+            <div class="lightbox-content">
+                <img class="lightbox-image" id="lightboxImage" src="" alt="">
+                <div class="lightbox-info" id="lightboxInfo">
+                    <h2 class="lightbox-title" id="lightboxTitle"></h2>
+                    <p class="lightbox-story" id="lightboxStory"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div class="loading" id="loading">
+            <p>Loading portfolio...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

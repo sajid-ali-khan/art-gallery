@@ -1,0 +1,708 @@
+/* ============================================================================
+   PENCIL PORTRAIT PORTFOLIO — EXHIBITION MODEL
+   Large hero images, serif-only typography, asymmetric left-aligned layout,
+   editorial and intentional. Gallery wall aesthetic.
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+
+/* ============================================================================
+   RESET & BASE
+   ============================================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #0e0e0e;
+    color: #d8d8d8;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    line-height: 1.8;
+    position: relative;
+}
+
+/* Film-stock grain overlay — subtle */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="5" seed="2"/><feColorMatrix type="saturate" values="0.2"/></filter><rect width="100%" height="100%" fill="%23666666" filter="url(%23noise)" opacity="0.04"/></svg>');
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Allow content to layer above grain */
+.container {
+    position: relative;
+    z-index: 2;
+}
+
+/* ============================================================================
+   TYPOGRAPHY
+   ============================================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+h1 {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1;
+}
+
+h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+p, a, button {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================================================
+   HEADER
+   ============================================================================ */
+
+.header {
+    padding: clamp(3rem, 10vh, 5rem) clamp(2rem, 6vw, 4rem) clamp(2.5rem, 8vh, 4rem);
+    border-bottom: 1px solid rgba(100, 100, 100, 0.2);
+    background: linear-gradient(180deg, rgba(20, 20, 20, 0.6) 0%, rgba(15, 15, 15, 0.8) 100%);
+    text-align: center;
+}
+
+.header-content {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.artist-name {
+    color: #f0f0f0;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.artist-subtitle {
+    color: #999;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+/* ============================================================================
+   CATEGORIES NAV
+   ============================================================================ */
+
+.categories-nav {
+    background: rgba(10, 10, 10, 0.5);
+    border-bottom: 1px solid rgba(100, 100, 100, 0.15);
+    backdrop-filter: blur(2px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.categories-list {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1.5rem clamp(2rem, 6vw, 4rem);
+    display: flex;
+    gap: 2.5rem;
+    justify-content: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    list-style: none;
+}
+
+/* Hide scrollbar */
+.categories-list::-webkit-scrollbar {
+    display: none;
+}
+
+.category-button {
+    flex-shrink: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #777;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.4s ease;
+    position: relative;
+    text-decoration: none;
+    min-width: 40px;
+    text-align: center;
+}
+
+.category-button::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #f0f0f0;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.4s ease;
+}
+
+.category-button:hover {
+    color: #b8b8b8;
+}
+
+.category-button.active {
+    color: #f0f0f0;
+}
+
+.category-button.active::after {
+    transform: scaleX(1);
+}
+
+/* ============================================================================
+   GALLERY SECTION — EXHIBITION MODEL
+   ============================================================================ */
+
+.gallery-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: clamp(3rem, 8vh, 5rem) clamp(2rem, 6vw, 4rem);
+    min-height: 60vh;
+}
+
+/* Hero image section */
+.hero-section {
+    margin-bottom: clamp(4rem, 10vh, 8rem);
+    animation: fadeIn 0.6s ease-out;
+}
+
+.hero-item {
+    width: 60%;
+    max-width: 600px;
+    aspect-ratio: 3 / 4;
+    margin: 0 auto clamp(2rem, 4vh, 3rem);
+    box-shadow: 
+        0 0 0 8px #0e0e0e,
+        0 0 0 9px rgba(150, 150, 150, 0.2),
+        0 20px 50px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+}
+
+.hero-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-caption {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.hero-caption h2 {
+    color: #f0f0f0;
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+}
+
+.hero-caption .hero-story {
+    color: #aaa;
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 400;
+}
+
+/* Asymmetric gallery grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 6vw, 5rem) clamp(2rem, 5vw, 4rem);
+    padding-bottom: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Gallery items with varying widths for left column */
+.gallery-item {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 0;
+    cursor: pointer;
+    position: relative;
+    background: #222;
+    border: none;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 
+        0 0 0 1px rgba(150, 150, 150, 0.2),
+        0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Stagger left column with varying widths */
+.gallery-item:nth-child(odd) {
+    grid-column: 1;
+}
+
+.gallery-item:nth-child(even) {
+    display: none;
+}
+
+.gallery-item:nth-child(4n+1) {
+    width: 80%;
+}
+
+.gallery-item:nth-child(4n+3) {
+    width: 50%;
+    margin-left: auto;
+}
+
+.gallery-item:nth-child(4n+5) {
+    width: 70%;
+}
+
+.gallery-item:hover {
+    box-shadow: 
+        0 0 0 1px rgba(180, 180, 180, 0.4),
+        0 20px 50px rgba(0, 0, 0, 0.7);
+    transform: translateY(-8px);
+}
+
+.gallery-item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.gallery-item:hover .gallery-item-image {
+    filter: brightness(1.08) contrast(1.05);
+}
+
+.gallery-item-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.9) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.gallery-item:hover .gallery-item-overlay {
+    opacity: 1;
+}
+
+.gallery-item-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    color: #999;
+    letter-spacing: 2px;
+}
+
+.gallery-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: #f0f0f0;
+    font-style: italic;
+    line-height: 1.2;
+}
+
+.gallery-item-story {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: #bbb;
+    line-height: 1.4;
+}
+
+/* ============================================================================
+   LIGHTBOX
+   ============================================================================ */
+
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.lightbox.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-content {
+    position: relative;
+    width: 85%;
+    max-width: 750px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lightbox-image {
+    max-width: 100%;
+    max-height: 75vh;
+    object-fit: contain;
+}
+
+.lightbox-info {
+    width: 100%;
+    text-align: center;
+    max-width: 600px;
+}
+
+.lightbox-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    color: #f0f0f0;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+}
+
+.lightbox-story {
+    font-family: 'Cormorant Garamond', serif;
+    color: #aaa;
+    font-size: 1rem;
+    line-height: 1.8;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+/* Lightbox controls */
+.lightbox-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    color: #d8d8d8;
+    font-size: 2.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.lightbox-close:hover {
+    background: rgba(0, 0, 0, 0.8);
+    color: #f0f0f0;
+}
+
+.lightbox-prev,
+.lightbox-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    color: #d8d8d8;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    background: rgba(0, 0, 0, 0.8);
+    color: #f0f0f0;
+}
+
+.lightbox-prev {
+    left: 2rem;
+}
+
+.lightbox-next {
+    right: 2rem;
+}
+
+/* ============================================================================
+   LOADING STATE
+   ============================================================================ */
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0e0e0e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    pointer-events: auto;
+}
+
+.loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading p {
+    font-family: 'Cormorant Garamond', serif;
+    color: #666;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+/* ============================================================================
+   DIVIDERS
+   ============================================================================ */
+
+hr {
+    border: none;
+    height: 1px;
+    background: rgba(100, 100, 100, 0.3);
+    margin: 2rem 0;
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .gallery-item {
+        width: 100% !important;
+    }
+
+    .gallery-item:nth-child(even) {
+        display: block;
+        grid-column: 1;
+    }
+
+    .hero-item {
+        width: 70%;
+    }
+}
+
+@media (max-width: 768px) {
+    .artist-name {
+        font-size: 2.2rem;
+    }
+
+    .categories-list {
+        gap: 1.5rem;
+        padding: 1.2rem clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    .category-button {
+        font-size: 1.1rem;
+    }
+
+    .gallery-section {
+        padding: 2rem 1.5rem;
+    }
+
+    .hero-item {
+        width: 75%;
+    }
+
+    .lightbox-content {
+        width: 92%;
+        gap: 1.5rem;
+    }
+
+    .lightbox-prev,
+    .lightbox-next {
+        width: 42px;
+        height: 42px;
+        font-size: 1.2rem;
+    }
+
+    .lightbox-prev {
+        left: 1rem;
+    }
+
+    .lightbox-next {
+        right: 1rem;
+    }
+
+    .lightbox-close {
+        width: 44px;
+        height: 44px;
+        font-size: 2rem;
+        top: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .lightbox-image {
+        max-height: 55vh;
+    }
+
+    .lightbox-title {
+        font-size: 1.2rem;
+    }
+
+    .lightbox-story {
+        font-size: 0.95rem;
+        max-height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 2rem 1rem 1.5rem;
+    }
+
+    .artist-name {
+        font-size: 1.8rem;
+    }
+
+    .artist-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .categories-list {
+        gap: 1rem;
+        padding: 1rem;
+        justify-content: flex-start;
+    }
+
+    .category-button {
+        font-size: 1rem;
+    }
+
+    .gallery-section {
+        padding: 1.5rem 1rem;
+    }
+
+    .hero-item {
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-caption h2 {
+        font-size: 1.3rem;
+    }
+
+    .hero-caption .hero-story {
+        font-size: 0.9rem;
+    }
+
+    .gallery-grid {
+        gap: 1.5rem;
+    }
+
+    .gallery-item {
+        box-shadow: 
+            0 0 0 1px rgba(150, 150, 150, 0.15),
+            0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .gallery-item:hover {
+        box-shadow: 
+            0 0 0 1px rgba(180, 180, 180, 0.3),
+            0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .gallery-item-name {
+        font-size: 0.9rem;
+    }
+
+    .gallery-item-story {
+        font-size: 0.8rem;
+    }
+
+    .lightbox-prev,
+    .lightbox-next {
+        display: none;
+    }
+
+    .lightbox-close {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .lightbox-image {
+        max-height: 45vh;
+    }
+
+    .lightbox-content {
+        width: 95%;
+        gap: 1.25rem;
+    }
+
+    .lightbox-title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .lightbox-story {
+        font-size: 0.85rem;
+        max-height: 80px;
+    }
+}

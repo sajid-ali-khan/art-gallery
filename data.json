@@ -1,0 +1,169 @@
+{
+  "categories": [
+    {
+      "name": "book1",
+      "pieces": [
+        {
+          "file": "images/book1/IMG_20260319_165316.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165337.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165348.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165356.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165409.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165425.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165439.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165454.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165504.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165518.jpg"
+        },
+        {
+          "file": "images/book1/IMG_20260319_165546.jpg"
+        }
+      ]
+    },
+    {
+      "name": "book2",
+      "pieces": [
+        {
+          "file": "images/book2/1book_cover.png"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170545.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170606.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170616.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170642.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170704.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170717.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170727.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170809.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170827.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170841.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170852.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170933.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_170946.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171024.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171045.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171055.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171106.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171121.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171128.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171144.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171152.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171205.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171228.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171238.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171251.jpg"
+        },
+        {
+          "file": "images/book2/IMG_20260319_171306.jpg"
+        }
+      ]
+    },
+    {
+      "name": "book3",
+      "pieces": [
+        {
+          "file": "images/book3/1book_cover.jpeg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164345.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164407.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164429.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164451.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164503.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164516.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164526.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164603.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164616.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164633.jpg"
+        },
+        {
+          "file": "images/book3/IMG_20260319_164656.jpg"
+        }
+      ]
+    }
+  ]
+}

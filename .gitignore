@@ -1,0 +1,19 @@
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+
+# Node/Python (if added later)
+node_modules/
+__pycache__/
+*.pyc
+.python-version
+venv/
