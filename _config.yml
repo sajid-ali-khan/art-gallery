@@ -1,3 +1,5 @@
 remote_theme: pages-themes/architect@v0.2.0
+title: Sajid Ali Khan – Pencil Portraits
+description: A portfolio of pencil portraits and sketches.
 plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
+- jekyll-remote-theme

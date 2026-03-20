@@ -1,5 +1,6 @@
 /* ============================================================================
    PENCIL PORTRAIT PORTFOLIO — SCRIPT
+   Architect Theme Edition
    Dynamically renders gallery from data.json
    ============================================================================ */
 
@@ -9,278 +10,322 @@ class PortfolioApp {
         this.currentCategory = null;
         this.currentLightboxIndex = null;
         this.currentLightboxCategory = null;
-        this.galleryGrid = document.getElementById('galleryGrid');
-        this.categoriesList = document.getElementById('categoriesList');
-        this.lightbox = document.getElementById('lightbox');
+
+        // DOM refs
+        this.galleryGrid      = document.getElementById('galleryGrid');
+        this.categoriesList   = document.getElementById('categoriesList');
+        this.lightbox         = document.getElementById('lightbox');
         this.loadingIndicator = document.getElementById('loading');
+        this.sectionHeader    = document.getElementById('sectionHeader');
+        this.heroSection      = document.getElementById('heroSection');
 
         this.setupLightboxListeners();
+        this.setupMobileMenu();
         this.loadData();
     }
 
-    /**
-     * Fetch and parse data.json
-     */
+    // -------------------------------------------------------------------------
+    // Data loading
+    // -------------------------------------------------------------------------
+
     async loadData() {
         try {
             const response = await fetch('data.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             this.data = await response.json();
             this.init();
-        } catch (error) {
-            console.error('Failed to load data.json:', error);
+        } catch (err) {
+            console.error('Failed to load data.json:', err);
             this.showError('Failed to load portfolio data. Please refresh the page.');
         }
     }
 
-    /**
-     * Initialize app after data is loaded
-     */
     init() {
-        if (!this.data || !this.data.categories || this.data.categories.length === 0) {
-            this.showError('No categories found. Make sure images are in the images/ folder and generate.py has been run.');
+        if (!this.data?.categories?.length) {
+            this.showError('No categories found. Run python generate.py to populate data.json.');
             return;
         }
-
         this.renderCategories();
-        // Select first category by default
         this.selectCategory(this.data.categories[0].name);
         this.hideLoading();
     }
 
-    /**
-     * Render category buttons with numbers only
-     */
+    // -------------------------------------------------------------------------
+    // Category rendering
+    // -------------------------------------------------------------------------
+
     renderCategories() {
         this.categoriesList.innerHTML = '';
-
         this.data.categories.forEach((category, index) => {
-            const button = document.createElement('button');
-            button.className = 'category-button';
-            button.textContent = (index + 1).toString();
-            button.addEventListener('click', () => this.selectCategory(category.name));
-            this.categoriesList.appendChild(button);
+            const li = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.className = 'category-button';
+            btn.dataset.category = category.name;
+            btn.innerHTML = `
+                <span class="cat-index">${index + 1}</span>
+                <span class="cat-name">${category.name.replace(/[-_]/g, ' ')}</span>
+                <span class="cat-count">${category.pieces.length}</span>
+            `;
+            btn.addEventListener('click', () => {
+                this.selectCategory(category.name);
+                this.closeMobileMenu();
+            });
+            li.appendChild(btn);
+            this.categoriesList.appendChild(li);
         });
     }
 
-    /**
-     * Select a category and render its items
-     */
     selectCategory(categoryName) {
         this.currentCategory = categoryName;
 
         // Update active button
-        document.querySelectorAll('.category-button').forEach((btn) => {
-            const categoryIndex = this.data.categories.findIndex((cat) => cat.name === categoryName);
-            const buttonIndex = Array.from(this.categoriesList.children).indexOf(btn);
-            btn.classList.toggle('active', buttonIndex === categoryIndex);
+        document.querySelectorAll('.category-button').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.category === categoryName);
         });
 
-        // Find category data
-        const category = this.data.categories.find((cat) => cat.name === categoryName);
+        const category = this.data.categories.find(c => c.name === categoryName);
         if (!category) return;
 
-        // Render hero and gallery items
+        this.renderSectionHeader(category);
         this.renderHero(category);
         this.renderGallery(category);
+
+        // Scroll main content to top
+        document.getElementById('mainContent')?.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /**
-     * Render hero image section (first piece of category)
-     */
-    renderHero(category) {
-        const heroSection = document.getElementById('heroSection');
-        heroSection.innerHTML = '';
+    // -------------------------------------------------------------------------
+    // Section header
+    // -------------------------------------------------------------------------
 
-        if (!category.pieces || category.pieces.length === 0) {
-            return;
-        }
-
-        const firstPiece = category.pieces[0];
-        const heroItem = document.createElement('div');
-        heroItem.className = 'hero-item';
-
-        heroItem.innerHTML = `
-            <img src="${firstPiece.file}" alt="${firstPiece.name || 'Artwork'}" class="hero-item-image" loading="lazy">
-            ${firstPiece.name || firstPiece.story ? `
-                <div class="hero-item-caption">
-                    ${firstPiece.name ? `<div class="hero-item-name">${firstPiece.name}</div>` : ''}
-                    ${firstPiece.story ? `<div class="hero-item-story">${firstPiece.story}</div>` : ''}
-                </div>
-            ` : ''}
+    renderSectionHeader(category) {
+        const displayName = category.name.replace(/[-_]/g, ' ');
+        const count = category.pieces.length;
+        this.sectionHeader.innerHTML = `
+            <h2 class="section-title">${displayName}</h2>
+            <p class="section-meta">${count} piece${count !== 1 ? 's' : ''}</p>
         `;
-
-        heroItem.addEventListener('click', () => {
-            this.openLightbox(0, category.name);
-        });
-
-        heroSection.appendChild(heroItem);
     }
 
-    /**
-     * Render gallery items for selected category (excluding hero image)
-     */
+    // -------------------------------------------------------------------------
+    // Hero image
+    // -------------------------------------------------------------------------
+
+    renderHero(category) {
+        this.heroSection.innerHTML = '';
+        if (!category.pieces?.length) return;
+
+        const first = category.pieces[0];
+        const hasInfo = first.name || first.story;
+
+        if (hasInfo) {
+            const card = document.createElement('div');
+            card.className = 'hero-card';
+            card.innerHTML = `
+                <img src="${first.file}" alt="${first.name || 'Artwork'}" class="hero-card-image" loading="lazy">
+                <div class="hero-card-body">
+                    <span class="hero-badge">Featured</span>
+                    ${first.name ? `<h3 class="hero-card-title">${first.name}</h3>` : ''}
+                    ${first.story ? `<p class="hero-card-story">${first.story}</p>` : ''}
+                    <p class="hero-card-cta">Click to view full size →</p>
+                </div>
+            `;
+            card.addEventListener('click', () => this.openLightbox(0, category.name));
+            this.heroSection.appendChild(card);
+        } else {
+            const wrap = document.createElement('div');
+            wrap.className = 'hero-image-only';
+            const img = document.createElement('img');
+            img.src   = first.file;
+            img.alt   = first.name || 'Artwork';
+            img.className = 'hero-image';
+            img.loading = 'lazy';
+            wrap.appendChild(img);
+            wrap.addEventListener('click', () => this.openLightbox(0, category.name));
+            this.heroSection.appendChild(wrap);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Gallery grid
+    // -------------------------------------------------------------------------
+
     renderGallery(category) {
         this.galleryGrid.innerHTML = '';
 
-        // Skip first piece (it's the hero)
-        const galleryPieces = category.pieces.slice(1);
+        // Gallery label
+        const label = document.createElement('p');
+        label.className = 'gallery-section-label';
+        label.textContent = `All pieces (${category.pieces.length - 1} more)`;
+        this.galleryGrid.appendChild(label);
 
-        galleryPieces.forEach((piece, index) => {
+        // Skip hero (index 0)
+        const pieces = category.pieces.slice(1);
+
+        pieces.forEach((piece, i) => {
             const item = document.createElement('div');
             item.className = 'gallery-item';
-            // Catalogue number starts from 002 (since 001 is the hero)
-            const catalogueNumber = String(index + 2).padStart(3, '0');
+
+            const catalogueNo = String(i + 2).padStart(3, '0');
+            const hasFooter   = piece.name || piece.story;
+
             item.innerHTML = `
-                <img src="${piece.file}" alt="${piece.name || 'Artwork'}" class="gallery-item-image" loading="lazy">
-                <div class="gallery-item-overlay">
-                    <div class="gallery-item-number">${catalogueNumber}</div>
-                    ${piece.name ? `<div class="gallery-item-name">${piece.name}</div>` : ''}
-                    ${piece.story ? `<div class="gallery-item-story">${piece.story}</div>` : ''}
+                <div class="gallery-item-image-wrap">
+                    <img
+                        src="${piece.file}"
+                        alt="${piece.name || 'Artwork'}"
+                        class="gallery-item-image"
+                        loading="lazy"
+                    >
+                    <div class="gallery-item-badge">${catalogueNo}</div>
+                    <div class="gallery-item-overlay">View</div>
                 </div>
+                ${hasFooter ? `
+                    <div class="gallery-item-footer">
+                        ${piece.name  ? `<div class="gallery-item-name">${piece.name}</div>` : ''}
+                        ${piece.story ? `<div class="gallery-item-story">${piece.story}</div>` : ''}
+                    </div>
+                ` : ''}
             `;
 
-            item.addEventListener('click', () => {
-                // Pass index + 1 to lightbox because hero is at index 0
-                this.openLightbox(index + 1, category.name);
-            });
-
+            item.addEventListener('click', () => this.openLightbox(i + 1, category.name));
             this.galleryGrid.appendChild(item);
         });
     }
 
-    /**
-     * Open lightbox at specific piece
-     */
+    // -------------------------------------------------------------------------
+    // Lightbox
+    // -------------------------------------------------------------------------
+
     openLightbox(index, categoryName) {
-        this.currentLightboxIndex = index;
+        this.currentLightboxIndex    = index;
         this.currentLightboxCategory = categoryName;
         this.updateLightboxContent();
         this.lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
+        document.body.style.overflow = 'hidden';
     }
 
-    /**
-     * Update lightbox content
-     */
     updateLightboxContent() {
-        const category = this.data.categories.find((cat) => cat.name === this.currentLightboxCategory);
+        const category = this.data.categories.find(c => c.name === this.currentLightboxCategory);
         if (!category) return;
 
         const piece = category.pieces[this.currentLightboxIndex];
         if (!piece) return;
 
-        const lightboxImage = document.getElementById('lightboxImage');
-        const lightboxTitle = document.getElementById('lightboxTitle');
-        const lightboxStory = document.getElementById('lightboxStory');
+        const img   = document.getElementById('lightboxImage');
+        const title = document.getElementById('lightboxTitle');
+        const story = document.getElementById('lightboxStory');
+        const info  = document.getElementById('lightboxInfo');
 
-        lightboxImage.src = piece.file;
-        lightboxImage.alt = piece.name || 'Artwork';
+        img.src = piece.file;
+        img.alt = piece.name || 'Artwork';
 
         if (piece.name) {
-            lightboxTitle.textContent = piece.name;
-            lightboxTitle.style.display = 'block';
+            title.textContent  = piece.name;
+            title.style.display = 'block';
         } else {
-            lightboxTitle.style.display = 'none';
+            title.style.display = 'none';
         }
 
         if (piece.story) {
-            lightboxStory.textContent = piece.story;
-            lightboxStory.style.display = 'block';
+            story.textContent  = piece.story;
+            story.style.display = 'block';
         } else {
-            lightboxStory.style.display = 'none';
+            story.style.display = 'none';
         }
+
+        // Hide info panel if no name or story
+        info.style.display = (piece.name || piece.story) ? 'block' : 'none';
     }
 
-    /**
-     * Close lightbox
-     */
     closeLightbox() {
         this.lightbox.classList.remove('active');
         document.body.style.overflow = '';
     }
 
-    /**
-     * Navigate to previous piece in lightbox
-     */
     prevPiece() {
-        const category = this.data.categories.find((cat) => cat.name === this.currentLightboxCategory);
-        if (!category) return;
-
-        this.currentLightboxIndex = (this.currentLightboxIndex - 1 + category.pieces.length) % category.pieces.length;
+        const cat = this.data.categories.find(c => c.name === this.currentLightboxCategory);
+        if (!cat) return;
+        this.currentLightboxIndex = (this.currentLightboxIndex - 1 + cat.pieces.length) % cat.pieces.length;
         this.updateLightboxContent();
     }
 
-    /**
-     * Navigate to next piece in lightbox
-     */
     nextPiece() {
-        const category = this.data.categories.find((cat) => cat.name === this.currentLightboxCategory);
-        if (!category) return;
-
-        this.currentLightboxIndex = (this.currentLightboxIndex + 1) % category.pieces.length;
+        const cat = this.data.categories.find(c => c.name === this.currentLightboxCategory);
+        if (!cat) return;
+        this.currentLightboxIndex = (this.currentLightboxIndex + 1) % cat.pieces.length;
         this.updateLightboxContent();
     }
 
-    /**
-     * Setup lightbox event listeners
-     */
     setupLightboxListeners() {
-        const lightboxClose = document.getElementById('lightboxClose');
-        const lightboxPrev = document.getElementById('lightboxPrev');
-        const lightboxNext = document.getElementById('lightboxNext');
+        document.getElementById('lightboxClose').addEventListener('click', () => this.closeLightbox());
+        document.getElementById('lightboxPrev').addEventListener('click', () => this.prevPiece());
+        document.getElementById('lightboxNext').addEventListener('click', () => this.nextPiece());
 
-        lightboxClose.addEventListener('click', () => this.closeLightbox());
-        lightboxPrev.addEventListener('click', () => this.prevPiece());
-        lightboxNext.addEventListener('click', () => this.nextPiece());
-
-        // Close on background click
-        this.lightbox.addEventListener('click', (e) => {
-            if (e.target === this.lightbox) {
-                this.closeLightbox();
-            }
+        this.lightbox.addEventListener('click', e => {
+            if (e.target === this.lightbox) this.closeLightbox();
         });
 
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', e => {
             if (!this.lightbox.classList.contains('active')) return;
-
-            switch (e.key) {
-                case 'Escape':
-                    this.closeLightbox();
-                    break;
-                case 'ArrowLeft':
-                    this.prevPiece();
-                    break;
-                case 'ArrowRight':
-                    this.nextPiece();
-                    break;
-            }
+            if (e.key === 'Escape')      this.closeLightbox();
+            if (e.key === 'ArrowLeft')   this.prevPiece();
+            if (e.key === 'ArrowRight')  this.nextPiece();
         });
     }
 
-    /**
-     * Hide loading indicator
-     */
+    // -------------------------------------------------------------------------
+    // Mobile menu
+    // -------------------------------------------------------------------------
+
+    setupMobileMenu() {
+        const toggle  = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        if (!toggle || !sidebar || !overlay) return;
+
+        toggle.addEventListener('click', () => {
+            const isOpen = sidebar.classList.contains('open');
+            if (isOpen) {
+                this.closeMobileMenu();
+            } else {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+
+        overlay.addEventListener('click', () => this.closeMobileMenu());
+    }
+
+    closeMobileMenu() {
+        document.getElementById('sidebar')?.classList.remove('open');
+        document.getElementById('sidebarOverlay')?.classList.remove('active');
+        if (!this.lightbox?.classList.contains('active')) {
+            document.body.style.overflow = '';
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Utils
+    // -------------------------------------------------------------------------
+
     hideLoading() {
         this.loadingIndicator.classList.add('hidden');
     }
 
-    /**
-     * Show error message
-     */
     showError(message) {
-        this.galleryGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #a8a8a0;">
-            <p style="margin-bottom: 1rem;">⚠ ${message}</p>
-            <p style="font-size: 0.85rem;">Run <code style="background: rgba(200, 190, 180, 0.1); padding: 0.25rem 0.5rem; border-radius: 2px;">python generate.py</code> to generate data.json from images.</p>
-        </div>`;
+        this.galleryGrid.innerHTML = `
+            <div style="grid-column:1/-1; text-align:center; padding:3rem 1rem; color:var(--text-muted);">
+                <p style="font-size:1.1rem; margin-bottom:0.75rem;">⚠ ${message}</p>
+                <p style="font-size:0.85rem;">Run <code style="background:var(--accent-light); color:var(--accent); padding:0.2rem 0.5rem; border-radius:4px;">python generate.py</code> to generate data.json from images.</p>
+            </div>
+        `;
         this.hideLoading();
     }
 }
 
-// Initialize app when DOM is ready
+// Initialise
 document.addEventListener('DOMContentLoaded', () => {
     new PortfolioApp();
 });
