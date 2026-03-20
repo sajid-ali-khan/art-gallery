@@ -1,11 +1,11 @@
 # Sajid Ali Khan — Pencil Portrait Portfolio
 
-A minimal, dark, gallery-style portfolio website for pencil sketches and portraits. Fully responsive, static, and deployable as-is.
+A minimal, gallery-style portfolio website for pencil sketches and portraits.
 
 ---
 
 ## Quick Start
-
+Clone the Repo.
 ### 1. Add Your Images
 
 Drop image files into the `images/` subdirectories:
