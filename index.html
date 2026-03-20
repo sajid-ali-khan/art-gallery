@@ -1,108 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sajid Ali Khan – Pencil Portraits</title>
-    <meta name="description" content="A portfolio of pencil portraits and sketches by Sajid Ali Khan.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Mobile Header (visible only on small screens) -->
-    <header class="mobile-header">
-        <div class="mobile-header-inner">
-            <div class="mobile-brand">
+---
+layout: default
+title: Sajid Ali Khan – Pencil Portraits
+description: A portfolio of pencil portraits and sketches by Sajid Ali Khan.
+---
+
+<!-- Mobile Header -->
+<header class="mobile-header">
+    <div class="mobile-header-inner">
+        <div class="mobile-brand">
+            <h1 class="artist-name">Sajid Ali Khan</h1>
+            <p class="artist-subtitle">Pencil Portraits &amp; Sketches</p>
+        </div>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>
+
+<div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <div class="sidebar-brand">
                 <h1 class="artist-name">Sajid Ali Khan</h1>
                 <p class="artist-subtitle">Pencil Portraits &amp; Sketches</p>
             </div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation">
-                <span></span><span></span><span></span>
-            </button>
+
+            <hr class="sidebar-divider">
+
+            <nav class="sidebar-nav" aria-label="Portfolio categories">
+                <p class="sidebar-nav-label">Collections</p>
+                <ul class="categories-list" id="categoriesList"></ul>
+            </nav>
+
+            <hr class="sidebar-divider">
+
+            <footer class="sidebar-footer">
+                <p class="sidebar-footer-text">
+                    Graphite on paper.<br>
+                    Every line, a story.
+                </p>
+                <p class="sidebar-copyright">© 2024 Sajid Ali Khan</p>
+            </footer>
         </div>
-    </header>
+    </aside>
 
-    <div class="layout">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-inner">
-                <!-- Brand -->
-                <div class="sidebar-brand">
-                    <h1 class="artist-name">Sajid Ali Khan</h1>
-                    <p class="artist-subtitle">Pencil Portraits &amp; Sketches</p>
-                </div>
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <div class="section-header" id="sectionHeader"></div>
+        <div class="hero-section" id="heroSection"></div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+    </main>
+</div>
 
-                <hr class="sidebar-divider">
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <button class="lightbox-prev" id="lightboxPrev">&#10094;</button>
+    <button class="lightbox-next" id="lightboxNext">&#10095;</button>
 
-                <!-- Category Nav -->
-                <nav class="sidebar-nav" aria-label="Portfolio categories">
-                    <p class="sidebar-nav-label">Collections</p>
-                    <ul class="categories-list" id="categoriesList">
-                        <!-- Populated dynamically -->
-                    </ul>
-                </nav>
-
-                <hr class="sidebar-divider">
-
-                <!-- Sidebar Footer -->
-                <footer class="sidebar-footer">
-                    <p class="sidebar-footer-text">
-                        Graphite on paper.<br>
-                        Every line, a story.
-                    </p>
-                    <p class="sidebar-copyright">© 2024 Sajid Ali Khan</p>
-                </footer>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Section Title -->
-            <div class="section-header" id="sectionHeader">
-                <!-- Populated dynamically -->
-            </div>
-
-            <!-- Hero Image -->
-            <div class="hero-section" id="heroSection">
-                <!-- Populated dynamically -->
-            </div>
-
-            <!-- Gallery Grid -->
-            <div class="gallery-grid" id="galleryGrid">
-                <!-- Populated dynamically -->
-            </div>
-        </main>
-    </div>
-
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
-        <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
-        <button class="lightbox-prev" id="lightboxPrev" aria-label="Previous">&#10094;</button>
-        <button class="lightbox-next" id="lightboxNext" aria-label="Next">&#10095;</button>
-        <div class="lightbox-content">
-            <div class="lightbox-image-wrap">
-                <img class="lightbox-image" id="lightboxImage" src="" alt="">
-            </div>
-            <div class="lightbox-info" id="lightboxInfo">
-                <h2 class="lightbox-title" id="lightboxTitle"></h2>
-                <p class="lightbox-story" id="lightboxStory"></p>
-            </div>
+    <div class="lightbox-content">
+        <div class="lightbox-image-wrap">
+            <img class="lightbox-image" id="lightboxImage" src="" alt="">
+        </div>
+        <div class="lightbox-info">
+            <h2 id="lightboxTitle"></h2>
+            <p id="lightboxStory"></p>
         </div>
     </div>
+</div>
 
-    <!-- Loading -->
-    <div class="loading" id="loading">
-        <div class="loading-inner">
-            <div class="loading-spinner"></div>
-            <p>Loading portfolio…</p>
-        </div>
+<!-- Loading -->
+<div class="loading" id="loading">
+    <div class="loading-inner">
+        <div class="loading-spinner"></div>
+        <p>Loading portfolio…</p>
     </div>
+</div>
 
-    <!-- Sidebar overlay (mobile) -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+<!-- Your assets -->
+<link rel="stylesheet" href="{{ '/style.css' | relative_url }}">
+<script src="{{ '/script.js' | relative_url }}"></script>
